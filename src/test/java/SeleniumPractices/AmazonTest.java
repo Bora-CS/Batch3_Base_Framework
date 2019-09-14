@@ -1,11 +1,14 @@
 package SeleniumPractices;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import DataObjects.AmazonSearchResult;
 import Utilities.Keywords;
 
 /*
@@ -19,6 +22,21 @@ import Utilities.Keywords;
 4, Calculate the average price based on the result
 */
 
+
+/*
+ * ArrayList<SomeType> has index
+ * HashMap<SomeType, AnotherType> 
+ * 
+ * ItemID, Title, Price
+ * 
+ * Options:
+ * ArrayList<HashMap> 
+ * ArrayList<String[]>
+ * HashMap<int, HashMap>
+ * HashMap<int, String[]> *** recommended
+ * 
+ */
+
 public class AmazonTest {
 
 	public static String searchItem = "iPhone Case";
@@ -28,11 +46,17 @@ public class AmazonTest {
 	public static String parentXpath = "//span[@data-component-type='s-search-results']/div[@class='s-result-list s-search-results sg-row']/div";
 	public static String titleXpath = "//span[@class='a-size-base-plus a-color-base a-text-normal']";
 	public static String priceXpath = "//span[@class='a-price']";
+	public static List<AmazonSearchResult> data;
 
 	public static void main(String[] args) {
 		try {
 			driver = Keywords.startTestOnChrome("https://www.amazon.com/");
+			data = new ArrayList<AmazonSearchResult> ();
 			action();
+			
+			System.out.println("Retrieving data no.33");
+			System.out.println("Title:" + data.get(33).ItemName);
+			System.out.println("Price:" + data.get(33).ItemPrice);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -82,12 +106,11 @@ public class AmazonTest {
 			}
 	
 			numberOfResults++;
-			System.out.println("Item No."+ numberOfResults);
-			System.out.println("\tPrice: " + price);
-			System.out.println("\tTitle: " + title);
-			
 			double priceD = Double.parseDouble(price.replace("$", ""));
 			sum+=priceD;
+
+			data.add(new AmazonSearchResult(numberOfResults, title, priceD));
+			
 		}
 	}
 
