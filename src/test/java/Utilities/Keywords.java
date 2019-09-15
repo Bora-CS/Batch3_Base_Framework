@@ -25,8 +25,15 @@ public class Keywords {
 		}
 	}
 
-	public static WebDriver startTestOnChrome(String applicationURL) {
+	public static WebDriver startTestOnChromeMac(String applicationURL) {
 		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver");
+		WebDriver driver = new ChromeDriver();
+		driver.get(applicationURL);
+		return driver;
+	}
+	
+	public static WebDriver startTestOnChromeWindows(String applicationURL) {
+		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		driver.get(applicationURL);
 		return driver;
