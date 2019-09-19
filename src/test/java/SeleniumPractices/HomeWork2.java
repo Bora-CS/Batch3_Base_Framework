@@ -18,10 +18,10 @@ public class HomeWork2 {
 		WebDriver driver = Keywords.startTestOnChrome("https://www.costco.com/");
 		WebDriverWait wait = new WebDriverWait(driver, 45);
 		wait.until(ExpectedConditions.presenceOfElementLocated
-				(By.xpath("//li[@aria-selected=\"true\"]/button[@id=\"slick-slide-control03\"]")));
+				(By.xpath("//a[@href='/CatalogSearch?dept=All&keyword=appleseptmvm19'][@role='tabpanel'][@aria-hidden='false']")));
 		driver.findElement(By.id("hero-carousel")).click();
 		
-		
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(@href,\"100497427\")]")));
 		String appleText = driver.findElement(By.id("rsltCntMsg")).getText();
 		if (appleText.contains("apple")) {
 			System.out.println("Test passed! = " + appleText);
@@ -49,7 +49,9 @@ public class HomeWork2 {
 		} catch (NoSuchElementException e) {
 			System.out.println("Checktout button could not be found!");
 		}
+		
+		Keywords.endTest(driver);
 	}
 	
-
+	
 }
