@@ -29,12 +29,6 @@ import Utilities.Keywords;
  * 
  * ItemID, Title, Price
  * 
- * Options:
- * ArrayList<HashMap> 
- * ArrayList<String[]>
- * HashMap<int, HashMap>
- * HashMap<int, String[]> *** recommended
- * 
  */
 
 public class AmazonTest {
