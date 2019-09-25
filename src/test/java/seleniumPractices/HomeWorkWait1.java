@@ -1,4 +1,4 @@
-package com.boratech.seleniumtest;
+package seleniumPractices;
 
 import java.util.concurrent.TimeUnit;
 
