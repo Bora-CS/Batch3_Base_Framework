@@ -1,5 +1,9 @@
 package APITests;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+
 import org.json.simple.JSONObject;
 
 import io.restassured.RestAssured;
@@ -14,9 +18,10 @@ public class BoraAPIs {
 
 	public static void main(String[] args) {
 		
-		login("miller.muradil@gmail.com", "murad001");
+		login("jon.doe@gmail.com", "Hello12345");
 		getCurrentUserProfile();
 		
+	
 	}
 	
 	public static void getCurrentUserProfile() {
@@ -27,16 +32,15 @@ public class BoraAPIs {
 		}
 	}
 
-	public static void getCurrentUserProfile(String token) {
+	public static ArrayList<HashMap<String, Object>> getCurrentUserProfile(String token) {
 		String endPoint = "/api/profile";
 		RestAssured.baseURI = APPLICATION_URL;
 		RequestSpecification request = RestAssured.given();
 		request.header("Authorization", token);
 		Response response = request.get(endPoint);
 		JsonPath jp = response.jsonPath();
-		String handle = jp.get("handle");
-		String name = jp.get("user.name");
-		System.out.println("Profile retireved for User:"+ name + " with Handle:"+ handle);
+		ArrayList<HashMap<String, Object>> experiences = jp.get("experience");
+		return experiences;		
 	}
 
 	public static void login(String email, String password) {
