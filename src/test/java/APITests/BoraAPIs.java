@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.json.simple.JSONObject;
 
+import DataObjects.Experience;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -21,7 +22,7 @@ public class BoraAPIs {
 		login("jon.doe@gmail.com", "Hello12345");
 		getCurrentUserProfile();
 		
-	
+		
 	}
 	
 	public static void getCurrentUserProfile() {
@@ -32,15 +33,20 @@ public class BoraAPIs {
 		}
 	}
 
-	public static ArrayList<HashMap<String, Object>> getCurrentUserProfile(String token) {
+	public static void getCurrentUserProfile(String token) {
 		String endPoint = "/api/profile";
 		RestAssured.baseURI = APPLICATION_URL;
 		RequestSpecification request = RestAssured.given();
 		request.header("Authorization", token);
 		Response response = request.get(endPoint);
 		JsonPath jp = response.jsonPath();
-		ArrayList<HashMap<String, Object>> experiences = jp.get("experience");
-		return experiences;		
+//		ArrayList<HashMap<String, Object>> experiences = jp.get("experience");
+		
+		Experience[] experiences = jp.getObject("experience", Experience[].class);
+		for (Experience exp : experiences) {
+			System.out.println("John Doe worked at " + exp.company + " as " + exp.title);
+		}
+		
 	}
 
 	public static void login(String email, String password) {
