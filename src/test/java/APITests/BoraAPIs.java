@@ -18,10 +18,10 @@ public class BoraAPIs {
 	public static String token;
 
 	public static void main(String[] args) {
+//		login("jon.doe@gmail.com", "Hello12345");
+//		getCurrentUserProfile();
 		
-		login("jon.doe@gmail.com", "Hello12345");
-		getCurrentUserProfile();
-		
+		getAllPosts();
 		
 	}
 	
@@ -30,6 +30,22 @@ public class BoraAPIs {
 			System.out.println("No token is available to use!");
 		} else {
 			getCurrentUserProfile(token);
+		}
+	}
+	
+	public static void getAllPosts () {
+		String endPoint = "/api/posts";
+		RestAssured.baseURI = APPLICATION_URL;
+		RequestSpecification request = RestAssured.given();
+		Response response = request.get(endPoint);
+		JsonPath jp = response.jsonPath();
+		ArrayList<HashMap<String, Object>> posts = jp.get("");
+		System.out.println(posts.size());
+		
+		int counter = 1;
+		for (HashMap<String, Object> post : posts) {
+			System.out.println(counter + " " + post.get("text"));
+			counter++;
 		}
 	}
 
