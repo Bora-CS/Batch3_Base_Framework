@@ -7,6 +7,7 @@ import java.util.Set;
 import org.json.simple.JSONObject;
 
 import DataObjects.Experience;
+import DataObjects.Post;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -21,7 +22,7 @@ public class BoraAPIs {
 //		login("jon.doe@gmail.com", "Hello12345");
 //		getCurrentUserProfile();
 		
-		getAllPosts();
+		getAllPostsByPOJO();
 		
 	}
 	
@@ -33,7 +34,7 @@ public class BoraAPIs {
 		}
 	}
 	
-	public static void getAllPosts () {
+	public static void getAllPostsByListOfMap () {
 		String endPoint = "/api/posts";
 		RestAssured.baseURI = APPLICATION_URL;
 		RequestSpecification request = RestAssured.given();
@@ -45,6 +46,24 @@ public class BoraAPIs {
 		int counter = 1;
 		for (HashMap<String, Object> post : posts) {
 			System.out.println(counter + " " + post.get("text"));
+			counter++;
+		}
+	}
+	
+	public static void getAllPostsByPOJO () {
+		String endPoint = "/api/posts";
+		RestAssured.baseURI = APPLICATION_URL;
+		RequestSpecification request = RestAssured.given();
+		Response response = request.get(endPoint);
+		JsonPath jp = response.jsonPath();
+		
+		Post[] posts = jp.getObject("", Post[].class);
+
+		int counter = 1;
+		for (Post post : posts) {
+			System.out.println("Post #"+ counter + ": ");
+			System.out.println("Posted by user: " + post.user);
+			System.out.println("Content: " + post.text + "\n");
 			counter++;
 		}
 	}
