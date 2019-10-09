@@ -19,11 +19,25 @@ public class BoraAPIs {
 	public static String token;
 
 	public static void main(String[] args) {
-//		login("jon.doe@gmail.com", "Hello12345");
-//		getCurrentUserProfile();
-		
-		getAllPostsByPOJO();
-		
+		login("jon.doe@gmail.com", "Hello12345");		
+		int originalNumberOfPosts = getTotalNumberOfPosts();
+		System.out.println("There's currently " + originalNumberOfPosts + " posts");
+		String message = "This is a very very new and exciting message";
+		createPost(message);
+		if (getTotalNumberOfPosts() == (originalNumberOfPosts + 1)) {
+			System.out.println("There's now " + getTotalNumberOfPosts() + " posts, which is expected.");
+			Post[] allPosts = getAllPostsByPOJO();
+			boolean found = false;
+			for (Post post : allPosts) {
+				if (post.text.equals(message)) {
+					found = true;
+					break;
+				}
+			}
+			System.out.println(found ? "Pass - post with correct message found!" : "Fail - post with expected message not found!");
+		} else {
+			System.out.println("Something went wrong, seems like there's no new post created.");
+		}
 	}
 	
 	public static void getCurrentUserProfile() {
@@ -31,6 +45,25 @@ public class BoraAPIs {
 			System.out.println("No token is available to use!");
 		} else {
 			getCurrentUserProfile(token);
+		}
+	}
+	
+	public static void createPost (String content) {
+		String endPoint = "/api/posts";
+		RestAssured.baseURI = APPLICATION_URL;
+		RequestSpecification request = RestAssured.given();
+		request.header("Authorization", token);
+		request.header("Content-Type", "application/json");
+		
+		JSONObject json = new JSONObject();
+		json.put("text", content);
+		
+		request.body(json);
+		Response response = request.post(endPoint);
+		if (response.getStatusCode() == 200) {
+			System.out.println("Post created successfully with message: " + content);
+		} else {
+			System.out.println("Post creation failed");
 		}
 	}
 	
@@ -50,7 +83,29 @@ public class BoraAPIs {
 		}
 	}
 	
-	public static void getAllPostsByPOJO () {
+	public static Post[] getAllPostsByPOJO () {
+		String endPoint = "/api/posts";
+		RestAssured.baseURI = APPLICATION_URL;
+		RequestSpecification request = RestAssured.given();
+		Response response = request.get(endPoint);
+		JsonPath jp = response.jsonPath();
+		
+		Post[] posts = jp.getObject("", Post[].class);
+		return posts;
+	}
+	
+	public static int getTotalNumberOfPosts () {
+		String endPoint = "/api/posts";
+		RestAssured.baseURI = APPLICATION_URL;
+		RequestSpecification request = RestAssured.given();
+		Response response = request.get(endPoint);
+		JsonPath jp = response.jsonPath();
+		
+		Post[] posts = jp.getObject("", Post[].class);
+		return posts.length;
+	}
+	
+	public static void validateNewPostAdded (String postContent) {
 		String endPoint = "/api/posts";
 		RestAssured.baseURI = APPLICATION_URL;
 		RequestSpecification request = RestAssured.given();
@@ -59,13 +114,7 @@ public class BoraAPIs {
 		
 		Post[] posts = jp.getObject("", Post[].class);
 
-		int counter = 1;
-		for (Post post : posts) {
-			System.out.println("Post #"+ counter + ": ");
-			System.out.println("Posted by user: " + post.user);
-			System.out.println("Content: " + post.text + "\n");
-			counter++;
-		}
+		
 	}
 
 	public static void getCurrentUserProfile(String token) {
